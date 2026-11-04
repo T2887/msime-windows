@@ -14,6 +14,8 @@
 #include "window/small_windows.h"
 #include "window/floating_toolbar_image_layout.h"
 #include "window/floating_toolbar_skin.h"
+#include "window/tray_menu_presenter.h"
+#include "ime_windows.h"
 
 #include "msimeui/Controls.h"
 #include "msimeui/DeviceResources.h"
@@ -1178,6 +1180,22 @@ bool FloatingToolbarPresenter::HandleMessage(UINT message, WPARAM wParam, LPARAM
         impl_->window->DispatchImportedMessage(message, wParam, lParam);
         Present();
         return true;
+    case WM_RBUTTONUP: {
+        // 在工具栏上点右键，弹出和语言栏同一个托盘菜单：把锚点换成光标那一点，
+        // 再走 ShowFromLangBar 的既有流程（菜单内容、尺寸、DPI 和置顶都由它负责）。
+        // 菜单不抢前台，输入的焦点不动；没绑定菜单宿主时什么都不做。
+        if (TrayMenuPresenter::Instance().IsBound())
+        {
+            POINT cursor{GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+            if (ClientToScreen(hwnd_, &cursor))
+            {
+                RECT anchor{cursor.x, cursor.y, cursor.x, cursor.y};
+                SetTrayMenuAnchorRect(anchor);
+                TrayMenuPresenter::Instance().ShowFromLangBar();
+            }
+        }
+        return true;
+    }
     default:
         return false;
     }

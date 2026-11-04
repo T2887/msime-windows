@@ -22,6 +22,11 @@ RECT GetTrayMenuAnchorRect()
     return g_trayMenuAnchor;
 }
 
+void SetTrayMenuAnchorRect(const RECT &anchor)
+{
+    g_trayMenuAnchor = anchor;
+}
+
 LRESULT CALLBACK WndProcMenuWindow(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (TrayMenuPresenter::Instance().HandleMessage(message, wParam, lParam))

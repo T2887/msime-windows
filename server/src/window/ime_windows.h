@@ -22,6 +22,9 @@ LRESULT CALLBACK WndProcCandWindow(HWND hwnd, UINT message, WPARAM wParam, LPARA
 LRESULT CALLBACK WndProcMenuWindow(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 // Last language-bar icon rectangle, retained for menu remeasurement and DPI changes
 RECT GetTrayMenuAnchorRect();
+// 把托盘菜单的锚点改到别的矩形（屏幕坐标）。语言栏右键之外，悬浮工具栏右键也用它把菜单挂在光标附近；
+// 菜单本身的绘制、尺寸和定位仍由 TrayMenuPresenter 负责。
+void SetTrayMenuAnchorRect(const RECT &anchor);
 LRESULT CALLBACK WndProcFtbWindow(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProcCaretStateWindow(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 void SetCandidateHostCloaked(bool cloaked);
